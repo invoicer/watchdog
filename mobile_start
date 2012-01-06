@@ -1,0 +1,3 @@
+cd /opt/madar
+echo $(date) >> mob.log
+./madarmobile -name_firm -ssl -d PORT 8006 >>mob.log && echo start madar $(date)

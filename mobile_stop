@@ -1,0 +1,9 @@
+#!/bin/bash
+
+pid=`ps ax | awk '($6 ~ /name_firm/)  { print $1 }'`
+echo $pid
+kill -15 $pid
+sleep 3
+kill -9 $pid
+
+

@@ -1,0 +1,32 @@
+#!/bin/bash
+AAA=1
+if [ "$1" =  "kill" ]; then
+ echo "kill"
+ pid=`ps ax | awk '(($6 ~ /mwatchdog/)  && ($7 != "kill") ) { print $1 }'`
+ echo $pid
+ kill -9 $pid 
+ exit 1
+fi
+ 
+if [ "x$2" != "x--" ]; then 
+$0 $1 -- 1>mwatchdoglog  2>/dev/null &
+exit 0
+fi
+
+while [ $AAA -eq 1 ]; 
+   do
+   echo start $1 $(date)
+  sleep 60
+  while [ $?  -eq 0 ];
+    do 
+      echo test $(date)
+      sleep 60
+      wget --tries=1 -T 10 --no-check-certificate  -O - https://127.0.0.1:$1/favicon.ico >/dev/null
+    done
+    echo "stop $? $(date)"
+    ./mobile_stop
+    sleep 2
+    ./mobile_start
+    ./wyslij_mail
+    
+done

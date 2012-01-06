@@ -1,0 +1,64 @@
+#!/bin/bash
+
+DATA=`date -I`
+MAILFILE=/bat/mail/mailfile
+ARCH_LOG=/opt/madar/madarlast.log
+SERWER="DEDYK"
+ADRES_SERWER=madar@serwer.pl
+WYSLIJ_DO=serwery@madar.com.pl
+ILOSC_MIEJSCA=`df -Th`
+STATUS_MOBILE=`ps ax | grep madarmobile | grep SCREEN`
+OBCIAZENIE_KOMPUTERA=`vmstat -s -S M`
+TEMP_CPU=`sensors`
+TEMP_HDD1=`hddtemp /dev/hda`
+#TEMP_HDD2=`hddtemp /dev/sdb`
+
+echo "Status madarmobile na serwerze:" >> ${MAILFILE}
+echo >> ${MAILFILE}
+echo "${STATUS_MOBILE}" >> ${MAILFILE}
+
+echo >> ${MAILFILE}
+echo "----------------------------------------------------------------------------------" >> ${MAILFILE}
+echo >> ${MAILFILE}
+
+echo "Ostatni log z archiwum:" >> ${MAILFILE}
+echo >> ${MAILFILE}
+cat  ${ARCH_LOG} >> ${MAILFILE}
+
+echo >> ${MAILFILE}
+echo "----------------------------------------------------------------------------------" >> ${MAILFILE}
+echo >> ${MAILFILE}
+
+echo "Temperatura procesora i dyskow:" >> ${MAILFILE}
+echo >> ${MAILFILE}
+echo "${TEMP_CPU}" >> ${MAILFILE}
+echo "${TEMP_HDD1}" >> ${MAILFILE}
+#echo "${TEMP_HDD2}" >> ${MAILFILE}
+
+echo >> ${MAILFILE}
+echo "----------------------------------------------------------------------------------" >> ${MAILFILE}
+echo >> ${MAILFILE}
+
+echo "Ilosc miejsca na partycjach:" >> ${MAILFILE}
+echo >> ${MAILFILE}
+echo "${ILOSC_MIEJSCA}" >> ${MAILFILE}
+
+echo >> ${MAILFILE}
+echo "----------------------------------------------------------------------------------" >> ${MAILFILE}
+echo >> ${MAILFILE}
+
+echo "Obciazenie komputera:" >> ${MAILFILE}
+echo >> ${MAILFILE}
+echo "${OBCIAZENIE_KOMPUTERA}" >> ${MAILFILE}
+
+echo >> ${MAILFILE}
+echo "----------------------------------------------------------------------------------" >> ${MAILFILE}
+echo >> ${MAILFILE}
+
+chmod 755 ${MAILFILE}
+echo "Prosze nie odpowiedac na tego maila. Zostal on wygenerowany automatycznie." >> ${MAILFILE}
+
+mail -s 'Serwer '${SERWER}' - raport na dzien '${DATA}'' -r ''${ADRES_SERWER}'' ${WYSLIJ_DO} < ${MAILFILE}
+mail -s 'Serwer '${SERWER}' - raport na dzien '${DATA}'' ${WYSLIJ_DO} < ${MAILFILE}
+
+rm -f ${MAILFILE}
