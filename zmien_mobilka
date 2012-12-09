@@ -1,0 +1,23 @@
+#!/bin/bash
+cd /bat
+./mwatchdog kill
+sudo -u mobile /bat/mobile_stop
+cd /opt/bak
+rm /opt/bak/invoicermobile.2
+cp -f /opt/bak/invoicermobile.1 /opt/bak/invoicermobile.2 || echo "zle kopiowanie do invoicermobile.2"
+cp -f /opt/bak/invoicermobile /opt/bak/invoicermobile.1 || echo "zle kopiowanie do invoicermobile.1"
+rm /opt/bak/invoicermobile && echo "skasowano bak invoicermobile"
+wget emadar.eu/demo/invoicermobile || exit
+
+cd /bat
+ 
+sleep 2
+cp -f /opt/bak/invoicermobile /opt/invoicermobile
+# chmod 755 /opt/madar/invoicermobile && echo "zmiana chmod invoicermobile"
+sleep 2
+cd /bat
+sudo -u mobile /bat/mobile_start 
+
+cd /bat
+/bat/wyslij_mail
+./mwatchdog 8443
